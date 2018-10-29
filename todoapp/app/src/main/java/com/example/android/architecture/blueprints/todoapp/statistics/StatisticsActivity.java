@@ -22,18 +22,18 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.android.architecture.blueprints.todoapp.Injection;
 import com.example.android.architecture.blueprints.todoapp.R;
+import com.example.android.architecture.blueprints.todoapp.my.base.BaseActivity;
 import com.example.android.architecture.blueprints.todoapp.util.ActivityUtils;
 
 /**
  * Show statistics for tasks.
  */
-public class StatisticsActivity extends AppCompatActivity {
+public class StatisticsActivity extends BaseActivity {
 
     private DrawerLayout mDrawerLayout;
 

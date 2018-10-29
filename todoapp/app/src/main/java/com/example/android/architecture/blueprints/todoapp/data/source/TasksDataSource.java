@@ -32,10 +32,22 @@ import java.util.List;
  */
 public interface TasksDataSource {
 
+    /**
+     * 获取Task列表数据结果的回调接口, 数据可能来自于远程数据源（如：服务器数据）,
+     * 或本地数据源（如：数据库中缓存的数据）
+     */
     interface LoadTasksCallback {
-
+        /**
+         * 当数据获取成功后的回调(对于远程数据源来说是网络通信正常,
+         * 对于本地数据源来说是从本地成功获取到非脏的数据)
+         * @param tasks 从数据源成功获取到的数据
+         */
         void onTasksLoaded(List<Task> tasks);
 
+        /**
+         * 当数据获取失败后的回调(对于远程数据源来说是网络通信失败,
+         * 对于本地数据源来说是本地无数据或虽有数据但都是脏数据)
+         */
         void onDataNotAvailable();
     }
 
@@ -64,7 +76,14 @@ public interface TasksDataSource {
 
     void refreshTasks();
 
+    /**
+     * 删除全部数据
+     */
     void deleteAllTasks();
 
+    /**
+     * 删除一条数据
+     * @param taskId
+     */
     void deleteTask(@NonNull String taskId);
 }

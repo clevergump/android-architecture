@@ -57,17 +57,23 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     private TasksContract.Presenter mPresenter;
 
     private TasksAdapter mListAdapter;
-
+    /**
+     * 无数据时的布局
+     */
     private View mNoTasksView;
-
+    /// 无数据时的布局中的指示图标
     private ImageView mNoTaskIcon;
-
+    /// 无数据时的布局中的提示语
     private TextView mNoTaskMainView;
-
+    /// 无数据时的布局中, 提示语下方用于添加一条数据的按钮
     private TextView mNoTaskAddView;
 
+    /// -------------------------------------/
+    /**
+     * 有数据时的布局
+     */
     private LinearLayout mTasksView;
-
+    /// 有数据时的布局中, 数据列表的标题
     private TextView mFilteringLabelView;
 
     public TasksFragment() {
@@ -79,25 +85,14 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mListAdapter = new TasksAdapter(new ArrayList<Task>(0), mItemListener);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPresenter.start();
-    }
-
-    @Override
     public void setPresenter(@NonNull TasksContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mPresenter.result(requestCode, resultCode);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mListAdapter = new TasksAdapter(new ArrayList<Task>(0), mItemListener);
     }
 
     @Nullable
@@ -132,6 +127,9 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 因为该控件不在该Fragment的layout中定义, 所以建议不要直接调用该fragment里的内容,
+                // 而是应该转发给 Presenter 去处理(只是这里刚好特殊, Presenter的处理措施刚好是
+                // 又来调用该fragment进行处理, 调用了showAddTask()方法)
                 mPresenter.addNewTask();
             }
         });
@@ -160,6 +158,17 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.tasks_fragment_menu, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_clear:
@@ -176,8 +185,8 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.tasks_fragment_menu, menu);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mPresenter.result(requestCode, resultCode);
     }
 
     @Override
@@ -252,6 +261,15 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         mNoTasksView.setVisibility(View.GONE);
     }
 
+    private void showNoTasksViews(String mainText, int iconRes, boolean showAddView) {
+        mTasksView.setVisibility(View.GONE);
+        mNoTasksView.setVisibility(View.VISIBLE);
+
+        mNoTaskMainView.setText(mainText);
+        mNoTaskIcon.setImageDrawable(getResources().getDrawable(iconRes));
+        mNoTaskAddView.setVisibility(showAddView ? View.VISIBLE : View.GONE);
+    }
+
     @Override
     public void showNoActiveTasks() {
         showNoTasksViews(
@@ -282,15 +300,6 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showSuccessfullySavedMessage() {
         showMessage(getString(R.string.successfully_saved_task_message));
-    }
-
-    private void showNoTasksViews(String mainText, int iconRes, boolean showAddView) {
-        mTasksView.setVisibility(View.GONE);
-        mNoTasksView.setVisibility(View.VISIBLE);
-
-        mNoTaskMainView.setText(mainText);
-        mNoTaskIcon.setImageDrawable(getResources().getDrawable(iconRes));
-        mNoTaskAddView.setVisibility(showAddView ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -21,6 +21,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.android.architecture.blueprints.todoapp.data.Task;
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource;
@@ -37,6 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class TasksLocalDataSource implements TasksDataSource {
 
+    private static final String TAG = "TasksLocalDataSource";
     private static TasksLocalDataSource INSTANCE;
 
     private TasksDbHelper mDbHelper;
@@ -164,6 +166,7 @@ public class TasksLocalDataSource implements TasksDataSource {
 
     @Override
     public void completeTask(@NonNull Task task) {
+        Log.d(TAG, "completeTask. threadName="+ Thread.currentThread().getName());
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -200,6 +203,7 @@ public class TasksLocalDataSource implements TasksDataSource {
 
     @Override
     public void activateTask(@NonNull String taskId) {
+        Log.d(TAG, "activateTask. threadName="+Thread.currentThread().getName());
         // Not required for the local data source because the {@link TasksRepository} handles
         // converting from a {@code taskId} to a {@link task} using its cached data.
     }

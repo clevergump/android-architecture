@@ -18,6 +18,7 @@ package com.example.android.architecture.blueprints.todoapp.data;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource;
 import com.google.common.collect.Lists;
@@ -31,6 +32,7 @@ import java.util.Map;
  */
 public class FakeTasksRemoteDataSource implements TasksDataSource {
 
+    private static final String TAG = "FakeTasksRemoteDataSource";
     private static FakeTasksRemoteDataSource INSTANCE;
 
     private static final Map<String, Task> TASKS_SERVICE_DATA = new LinkedHashMap<>();
@@ -63,6 +65,7 @@ public class FakeTasksRemoteDataSource implements TasksDataSource {
 
     @Override
     public void completeTask(@NonNull Task task) {
+        Log.d(TAG, "completeTask. threadName="+ Thread.currentThread().getName());
         Task completedTask = new Task(task.getTitle(), task.getDescription(), task.getId(), true);
         TASKS_SERVICE_DATA.put(task.getId(), completedTask);
     }
@@ -74,6 +77,7 @@ public class FakeTasksRemoteDataSource implements TasksDataSource {
 
     @Override
     public void activateTask(@NonNull Task task) {
+        Log.d(TAG, "activateTask. threadName="+Thread.currentThread().getName());
         Task activeTask = new Task(task.getTitle(), task.getDescription(), task.getId());
         TASKS_SERVICE_DATA.put(task.getId(), activeTask);
     }

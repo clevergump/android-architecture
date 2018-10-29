@@ -20,18 +20,18 @@ import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.example.android.architecture.blueprints.todoapp.Injection;
 import com.example.android.architecture.blueprints.todoapp.R;
+import com.example.android.architecture.blueprints.todoapp.my.base.BaseActivity;
 import com.example.android.architecture.blueprints.todoapp.util.ActivityUtils;
 import com.example.android.architecture.blueprints.todoapp.util.EspressoIdlingResource;
 
 /**
  * Displays task details screen.
  */
-public class TaskDetailActivity extends AppCompatActivity {
+public class TaskDetailActivity extends BaseActivity {
 
     public static final String EXTRA_TASK_ID = "TASK_ID";
 

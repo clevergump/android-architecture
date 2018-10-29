@@ -40,6 +40,7 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     private final TasksContract.View mTasksView;
 
+    // 要显示的task类别, 取值有： all, active, completed
     private TasksFilterType mCurrentFiltering = TasksFilterType.ALL_TASKS;
 
     private boolean mFirstLoad = true;
@@ -86,8 +87,12 @@ public class TasksPresenter implements TasksContract.Presenter {
         // The network request might be handled in a different thread so make sure Espresso knows
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
-
+        /// 从数据源获取数据
         mTasksRepository.getTasks(new TasksDataSource.LoadTasksCallback() {
+            /**
+             * 从数据源获取数据成功后, Presenter的回调
+             * @param tasks 从数据源成功获取到的数据
+             */
             @Override
             public void onTasksLoaded(List<Task> tasks) {
                 List<Task> tasksToShow = new ArrayList<Task>();
@@ -131,6 +136,9 @@ public class TasksPresenter implements TasksContract.Presenter {
                 processTasks(tasksToShow);
             }
 
+            /**
+             * 从数据源获取数据失败后, Presenter的回调
+             */
             @Override
             public void onDataNotAvailable() {
                 // The view may not be able to handle UI updates anymore
@@ -196,6 +204,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void completeTask(@NonNull Task completedTask) {
         checkNotNull(completedTask, "completedTask cannot be null!");
+        /// error: 在主线程执行, 不合适
         mTasksRepository.completeTask(completedTask);
         mTasksView.showTaskMarkedComplete();
         loadTasks(false, false);
@@ -204,6 +213,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void activateTask(@NonNull Task activeTask) {
         checkNotNull(activeTask, "activeTask cannot be null!");
+        /// error: 在主线程执行, 不合适
         mTasksRepository.activateTask(activeTask);
         mTasksView.showTaskMarkedActive();
         loadTasks(false, false);
